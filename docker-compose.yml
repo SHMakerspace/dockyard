@@ -1,0 +1,28 @@
+carontepass:
+  restart: always
+  build: ./carontepass
+  expose: 
+    - "8000"
+  volumes:
+    - /srv/static
+    - /srv/media
+    - /srv/logs
+
+nginx:
+  restart: always
+  build: ./nginx
+  ports:
+    - "80:80"
+  volumes:
+    - /www/static
+  volumes_from:
+    - carontepass
+  links:
+    - carontepass:carontepass
+webcam:
+  image: vividboarder/docker-rpi-motioneye
+  restart: always
+  ports:
+    - "8001:8765"
+  volumes:
+    - "/home/pi/motioneye:/var/lib/motioneye"
